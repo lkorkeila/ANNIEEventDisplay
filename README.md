@@ -4,6 +4,9 @@ The following repository contains libraries for viewing a 3D display of
 the ANNIE detector.  Examples for utilizing these libraries are also
 provided.
 
+The current working version of these libraries was written by Matt
+Wetstein's research group at Iowa State University. 
+
 #### ROOT DEPENDENCIES ####
 
 The Eve libraries rely on openGL, and ROOT must be built with the option
