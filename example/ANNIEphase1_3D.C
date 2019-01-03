@@ -4,7 +4,7 @@
   gSystem->Load("libGeom");
   gSystem->Load("libEve");
   gSystem->Load("libMinuit");
-  gSystem->Load("../lib/EventDisplay.so");
+  gSystem->Load("../lib/libEventDisplay.so");
 
   #include "TRandom3.h"
   #include <iomanip>
@@ -42,14 +42,16 @@
           double zcoor=-1981.2;
           double xcoor = (-3.5 + ((double)j+0.5)*0.875)*304.8;
           double ycoor = (-3.5 + ((double)k+0.5)*0.875)*304.8;
-
+          //Assume the bin content here is time.  Fill in
+          //0.0 for the charge info. for now
           if(bc!=0) ed->AddPMTHit(xcoor,ycoor,zcoor,bc,0.0);
       }
   }
 
 	
   ed->DrawDetector();
- 
+
+  //Specify time range to have color-code spread across 
   ed->SetTimeRanges(-30.0,30.0);
 
   ed->PlotEvent();

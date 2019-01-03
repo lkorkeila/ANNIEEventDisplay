@@ -36,7 +36,7 @@ INCLUDES = -I$(INCDIR)
 
 all: clean rootcint shared
 
-ROOTSO := $(LIBDIR)/EventDisplay.so
+ROOTSO := $(LIBDIR)/libEventDisplay.so
 
 ROOTDICT := $(SRCDIR)/EvtDisplayRootDict.cc
 
