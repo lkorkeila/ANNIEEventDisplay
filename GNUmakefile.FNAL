@@ -1,0 +1,91 @@
+# $Id: GNUmakefile,v 1.17 2006/09/04 15:43:27 t2k Exp $
+# --------------------------------------------------------------
+# GNUmakefile for examples module.  Gabriele Cosmo, 06/04/98.
+# --------------------------------------------------------------
+
+
+CXXFLAGS      = -g -Wall -fPIC -O0
+
+
+ROOTCFLAGS   := $(shell root-config --cflags) -DUSE_ROOT -fPIC
+ROOTLIBS     := $(shell root-config --evelibs) 
+ROOTGLIBS    := $(shell root-config --glibs)
+
+
+
+CXXFLAGS     += $(ROOTCFLAGS)
+
+CPPFLAGS  += -Wno-deprecated 
+CPPFLAGS  += -fdiagnostics-color=always -Wno-sign-compare
+CPPFLAGS  += -I$(PWD)/include
+CPPFLAGS  += -I$(ROOTSYS)/include $(ROOTCFLAGS) 
+EXTRALIBS += $(ROOTLIBS) $(ROOTGLIBS)
+
+CXX = g++
+G4SYSTEM=Linux-g++
+
+G4WORKDIR := .
+G4TMPDIR := $(G4WORKDIR)/tmp/$(G4SYSTEM)/EventDisplay
+
+INCDIR = ./include
+SRCDIR = ./src
+TMPDIR = ./tmp
+LIBDIR = ./lib
+BINDIR = ./bin
+
+
+
+ROOTSO    := $(LIBDIR)/libEventDisplay.so
+
+ROOTSRC := $(SRCDIR)/EventDisplay3D.cc $(INCDIR)/EventDisplay3D.hh $(SRCDIR)/EventDisplay2D.cc $(INCDIR)/EventDisplay2D.hh $(INCDIR)/EventDisplayLinkDef.hh
+
+ROOTOBJS := $(G4TMPDIR)/EventDisplay3D.o $(G4TMPDIR)/EventDisplay2D.o $(G4TMPDIR)/EvtDisplayRootDict.o
+
+
+
+.PHONY: directories
+
+all: directories $(SRCDIR)/EvtDisplayRootDict.cc $(LIBDIR)libEventDisplay.so
+
+directories: $(G4TMPDIR)
+
+$(G4TMPDIR) :
+	mkdir -p $(G4TMPDIR)
+
+
+libEventDisplay.so : $(ROOTOBJS) 
+	@echo Compiling libEventDisplay.so with GNUMakefile ...
+	@if [ ! -d $(G4TMPDIR) ] ; then mkdir $(G4TMPDIR) ; echo mkdir $(G4TMPDIR) ;fi
+	@$(CXX) -shared -O $^ -o $(ROOTSO) $(ROOTLIBS)
+	@cp src/EvtDisplayRootDict_rdict.pcm $(G4WORKDIR)
+
+#./src/WCSimRootDict.cc : $(ROOTSRC)
+#	@echo Compiling rootcint ...
+#	rootcint  -f ./src/WCSimRootDict.cc -c -I./include -I$(shell root-config --incdir) WCSimRootEvent.hh WCSimRootGeom.hh  WCSimPmtInfo.hh WCSimLAPPDInfo.hh WCSimLAPPDpulse.hh WCSimLAPPDpulseCluster.hh WCSimEnumerations.hh WCSimRootLinkDef.h
+
+$(SRCDIR)/EvtDisplayRootDict.cc : $(ROOTSRC)
+	@echo Compiling rootcint ...
+	rootcling -f $(SRCDIR)/EvtDisplayRootDict.cc -rml $(SRCDIR)/libEventDisplay.so -rmf $(SRCDIR)/libEventDisplay.rootmap -I$(INCDIR) -I$(shell root-config --incdir) EventDisplay3D.hh EventDisplay2D.hh
+
+rootcint: $(SRCDIR)/WCSimRootDict.cc
+
+$(G4TMPDIR)/%.o: src/%.cc include/%.hh
+	@echo Compiling $*.cc ...
+	@if [ ! -d $(G4TMPDIR) ] ; then mkdir $(G4TMPDIR) ; echo mkdir $(G4TMPDIR) ;fi
+	@echo $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $(G4TMPDIR)/$(*F).o $<
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $(G4TMPDIR)/$(*F).o $<
+
+$(G4TMPDIR)/EvtDisplayRootDict.o: src/EvtDisplayRootDict.cc
+	@echo Compiling $*.cc ...
+	@if [ ! -d $(G4TMPDIR) ] ; then mkdir $(G4TMPDIR) ; echo mkdir $(G4TMPDIR) ;fi
+	@echo $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $(G4TMPDIR)/$(*F).o $<
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $(G4TMPDIR)/$(*F).o $<
+
+clean :
+	@rm -f $(G4TMPDIR)/*.o
+	@rm -f ./src/EvtDisplayRootDict.cc
+	@rm -f lib/libEventDisplay.so
+	@rm -f lib/libEventDisplay.rootmap 
+	@rm -f EvtDisplayRootDict_rdict.pcm 
+	@rm -f src/EvtDisplayRootDict_rdict.pcm
+
