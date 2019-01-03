@@ -26,11 +26,10 @@
   // =========
 
   vector<vector<double> > theHits;
-  vector<vector<double> > theGens;
 
   TFile* mtf = new TFile(filename);
   TH2D* disphist = (TH2D*) mtf->Get(evtname);
-    
+  EventDisplay3D* ed = new EventDisplay3D();
     
   for(int j=0; j<8; j++){
       for(int k=0; k<8; k++){
@@ -43,40 +42,15 @@
           double zcoor=-1981.2;
           double xcoor = (-3.5 + ((double)j+0.5)*0.875)*304.8;
           double ycoor = (-3.5 + ((double)k+0.5)*0.875)*304.8;
-          vector<double> ahit;
-          ahit.push_back(xcoor);
-          ahit.push_back(ycoor);
-          ahit.push_back(zcoor);
-          ahit.push_back(bc);
-          ahit.push_back(400);
-          ahit.push_back(bc);
 
-          vector<double> ghit;
-          ghit.push_back(0);
-          ghit.push_back(0);
-          ghit.push_back(0);
-          ghit.push_back(0);
-
-          if(bc!=0) theHits.push_back(ahit);
-          theGens.push_back(ghit);
+          if(bc!=0) ed->AddPMTHit(xcoor,ycoor,zcoor,bc,0.0);
       }
   }
 
 	
-  EventDisplay3D* ed = new EventDisplay3D();
-  ed->AddHits(theHits);
-  //ed->DoGen(theGens);
   ed->DrawDetector();
  
-  ed->SetTimeRanges(0,0.2);
-  ed->SetTimeRanges(1,0.4);
-  ed->SetTimeRanges(2,0.6);
-  ed->SetTimeRanges(3,0.8);
-  ed->SetTimeRanges(4,1.0);
-  ed->SetTimeRanges(5,1.5);
-  ed->SetTimeRanges(6,2);
-  ed->SetTimeRanges(7,2.5);
-
+  ed->SetTimeRanges(-30.0,30.0);
 
   ed->PlotEvent();
 

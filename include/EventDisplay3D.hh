@@ -4,8 +4,10 @@
 #include "TObject.h"
 #include "TH1.h"
 
+#include <string>
 #include <iostream>
 #include <cmath>
+#include <map>
 
 #include "TGeometry.h"
 #include "TGeoManager.h"
@@ -21,8 +23,6 @@
 #include "TEveArrow.h"
 #include "TEveText.h"
 
-
-
 class EventDisplay3D : public TObject {
 
  public: 
@@ -31,23 +31,31 @@ class EventDisplay3D : public TObject {
 
   ~EventDisplay3D();
 
-  void AddHits(std::vector<std::vector<double> > hits) {_hits = hits;}
+  void PlotEvent();
 
-  void DoGen(std::vector<std::vector<double> > gcoor) {_genpositions = gcoor; _drawgen=true;}
+  void AddPMTHit(double x, double y, double z, double t, double q);
+  void AddLAPPDHit(double x, double y, double z, double t, double q);
+  void ClearPMTHits();
+  void ClearLAPPDHits();
 
   void DrawDetector();
 
-  void PlotEvent();
-
-  void SetTimeRanges(int ri, double tt) {_tb[ri]=tt;}
-
+  void SetTimeRanges(double min, double max);
+  bool TimeRangeSet;
 
  private: 
+  std::vector<double> PMTX;
+  std::vector<double> PMTY;
+  std::vector<double> PMTZ;
+  std::vector<double> PMTT;
+  std::vector<double> PMTQ;
+  
+  std::vector<double> LAPPDX;
+  std::vector<double> LAPPDY;
+  std::vector<double> LAPPDZ;
+  std::vector<double> LAPPDT;
+  std::vector<double> LAPPDQ;
 
-  bool _drawgen;
-
-  std::vector<std::vector<double> > _hits;
-  std::vector<std::vector<double> > _genpositions;
  
   double _tb[8];
  
@@ -59,9 +67,7 @@ class EventDisplay3D : public TObject {
 
   TGeoVolume *top; 
 
-
-  
-  ClassDef(EventDisplay3D,0)
+  //ClassDef(EventDisplay3D,0)
 
 };
 

@@ -23,15 +23,11 @@
 #include <iostream>
 #include <cmath>
 
-
-ClassImp(EventDisplay3D)
+//ClassImp(EventDisplay3D)
 
 EventDisplay3D::EventDisplay3D()
 {
   TEveManager::Create();
-
-  // as a default, do not draw gen event
-  _drawgen = false;	  
 
   // create new TStyle
   TStyle *fRootStyle = new  TStyle("My Style", "");
@@ -162,7 +158,7 @@ void EventDisplay3D::DrawDetector(){
   // close geometry
   geom->CloseGeometry();
 
-  std::cout<<"Made is this far!"<<std::endl;
+  std::cout<<"Made it this far!"<<std::endl;
 	
 
   // Create Geometry in Event Display
@@ -183,19 +179,34 @@ void EventDisplay3D::DrawDetector(){
 
 }
 
-
+void EventDisplay3D::SetTimeRanges(double Min, double Max){
+  // Given input range of timebins, calculate the color for each time bin
+  if (Min > Max){
+    std::cout << "Minimum time must be smaller than Maximum time"  << std::endl;
+  }
+  _tb[0] = Min;
+  double TimeRange = Max - Min;
+  double TimeSegment = TimeRange/7;
+  double currentInt = Min;
+  for (int i=1;i < 7; i++){
+    currentInt+=TimeSegment;
+    _tb[i] = currentInt;
+  }
+  _tb[7] = Max;
+  TimeRangeSet = true;
+  return;
+}
 
 void EventDisplay3D::PlotEvent(){
-
-
-
-
+  if(!TimeRangeSet){
+    std::cout << "Please set time range before plotting an event" << std::endl;
+  }
 
   // Containers for Hits
   // ===================
   Int_t markerStyle = 4;   
-    //Double_t markerSize = 0.25;
-    Double_t markerSize = 3.0;
+  //Double_t markerSize = 0.25;
+  Double_t markerSize = 3.0;
 
 
   Int_t colourCode1 = kBlue+1;
@@ -263,43 +274,18 @@ void EventDisplay3D::PlotEvent(){
   fHitList9->SetMarkerStyle(markerStyle);
   gEve->AddElement(fHitList9);
 
-  TEvePointSet* fHitListGen = new TEvePointSet();
-  fHitListGen->SetMarkerColor(kWhite);
-  fHitListGen->SetMarkerSize(markerSize);
-  fHitListGen->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitListGen);
-
 
   // Loop over digits
   // ================
-  for( Int_t ihit=0; ihit<_hits.size(); ihit++ ){
-
-    std::vector<double> vhit = _hits.at(ihit);
+  for(int i=0; i < PMTT.size(); i++){
+    
+    double t = PMTT[i];
      
-    double x = vhit.at(0);
-    double y = vhit.at(1);
-    double z = vhit.at(2);
-    double t = vhit.at(3);
-    double wl = vhit.at(4);
-    double Q = vhit.at(5);
-
-    // in future
-    // if( Q<GetPulseHeightCut() ) continue;
+    double x = PMTX[i];
+    double y = PMTY[i];
+    double z = PMTZ[i];
 
     Int_t listNumber = 0;
-
-    // color code by charge
-    /*
-    if( Q<0.8 )             listNumber = 1;
-    if( Q>=0.8 && Q<1.5 )   listNumber = 2;
-    if( Q>=1.5 && Q<2.5 )   listNumber = 3;
-    if( Q>=2.5 && Q<5.0 )   listNumber = 4;
-    if( Q>=5.0 && Q<10.0 )  listNumber = 5;
-    if( Q>=10.0 && Q<15.0 ) listNumber = 6;
-    if( Q>=15.0 && Q<20.0 ) listNumber = 7;
-    if( Q>=20.0 && Q<30.0 ) listNumber = 8;
-    if( Q>=30.0 )           listNumber = 9;
-    */
 
     if( t<_tb[0] )               listNumber = 1;
     if( t>=_tb[0] && t<_tb[1] )  listNumber = 2;
@@ -326,27 +312,7 @@ void EventDisplay3D::PlotEvent(){
       default: break;
     }
   }
-
-  // Loop over true photon starting positions
-  // ================
-
-
-  if(_drawgen){
-  	for( Int_t ipos=0; ipos<_genpositions.size(); ipos++ ){
-
-   		 std::vector<double> vpos = _genpositions.at(ipos);
-     
-  		  double gx = vpos.at(0);
-  		  double gy = vpos.at(1);
-   	  	  double gz = vpos.at(2);
-  		  double gt = vpos.at(3);
-  		  //double gwl = vpos.at(4);
-
-                 fHitListGen->SetNextPoint(gx,gy,gz); 
-        }
-   }
-
-
+  
   // Re-draw Event Display
   // =====================
   gEve->Redraw3D();
@@ -354,3 +320,34 @@ void EventDisplay3D::PlotEvent(){
   return;
 }
 
+void EventDisplay3D::AddPMTHit(double x, double y, double z, double t, double q){
+  PMTX.push_back(x);
+  PMTY.push_back(y);
+  PMTZ.push_back(z);
+  PMTT.push_back(t);
+  PMTQ.push_back(q);
+}
+
+void EventDisplay3D::AddLAPPDHit(double x, double y, double z, double t, double q){
+  LAPPDX.push_back(x);
+  LAPPDY.push_back(y);
+  LAPPDZ.push_back(z);
+  LAPPDT.push_back(t);
+  LAPPDQ.push_back(q);
+}
+
+void EventDisplay3D::ClearPMTHits(){
+  PMTX.clear();
+  PMTY.clear();
+  PMTZ.clear();
+  PMTT.clear();
+  PMTQ.clear();
+}
+
+void EventDisplay3D::ClearLAPPDHits(){
+  LAPPDX.clear();
+  LAPPDY.clear();
+  LAPPDZ.clear();
+  LAPPDT.clear();
+  LAPPDQ.clear();
+}
