@@ -13,8 +13,8 @@ The Eve libraries rely on openGL, and ROOT must be built with the option
 to use openGL.  To do this, you must first install the following dependencies
 with your favorite package manager:
 
-lib-mesaGL-devel
-lib-mesaGLU-devel
+mesa-libGL-devel
+mesa-libGLU-devel
 
 Then, go to your root build's directory and run the command
 
