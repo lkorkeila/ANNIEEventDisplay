@@ -32,3 +32,15 @@ issue reported regarding exporting your display.  For a linux system, you can ad
 Then, adjust your x server permissions using the xhost command.  The simplest option is to run a command like (where $containerId is your running container's ID):
 
 $ xhost local:$containerId
+
+### STRUCTURE ###
+The ANNIEDisplay class is a container that acts as an interface between
+all GUI elements.  The structure as is currently designed roughly is as
+shown:
+
+       ------->ANNIEDisplay<--------
+       |                           |
+       |                           |
+       |                           |
+       V                           V
+   EventDisplay3D               ControlGUI

@@ -40,9 +40,8 @@ ROOTSO := $(LIBDIR)/libEventDisplay.so
 
 ROOTDICT := $(SRCDIR)/EvtDisplayRootDict.cc
 
-ROOTSRC := $(SRCDIR)/EventDisplay3D.cc $(INCDIR)/EventDisplay3D.hh $(SRCDIR)/EventDisplay2D.cc $(INCDIR)/EventDisplay2D.hh $(INCDIR)/EventDisplayLinkDef.hh
-
-ROOTOBJS := $(TMPDIR)/EventDisplay3D.o $(TMPDIR)/EventDisplay2D.o $(TMPDIR)/EvtDisplayRootDict.o
+ROOTSRC := $(SRCDIR)/EventDisplay3D.cc $(INCDIR)/EventDisplay3D.hh $(SRCDIR)/EventDisplay2D.cc $(INCDIR)/EventDisplay2D.hh $(SRCDIR)/ANNIEDisplay.cc $(INCDIR)/ANNIEDisplay.hh $(INCDIR)/EventDisplayLinkDef.hh 
+ROOTOBJS := $(TMPDIR)/EventDisplay3D.o $(TMPDIR)/EventDisplay2D.o $(TMPDIR)/ANNIEDisplay.o $(TMPDIR)/EvtDisplayRootDict.o
 
 $(TMPDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "<**Compiling $@**>"
@@ -58,7 +57,7 @@ $(ROOTDICT) : $(ROOTSRC)
 
 rootcint : $(ROOTSRC)
 	@echo "<**Rootcint**>"
-	rootcint -f $(ROOTDICT) -c -I$(INCDIR) -I$(shell root-config --incdir) EventDisplay3D.hh EventDisplay2D.hh
+	rootcint -f $(ROOTDICT) -c -I$(INCDIR) -I$(shell root-config --incdir) EventDisplay3D.hh EventDisplay2D.hh ANNIEDisplay.hh
 shared: $(ROOTDICT) $(ROOTSRC) $(ROOTOBJS)
 	@echo "<**Shared**>"
 ifeq ($(UNAME), Darwin) 

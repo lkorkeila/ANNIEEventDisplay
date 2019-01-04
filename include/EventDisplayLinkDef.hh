@@ -6,6 +6,7 @@
 
 #pragma link C++ class EventDisplay3D+;
 #pragma link C++ class EventDisplay2D+;
+#pragma link C++ class ANNIEDisplay+;
 
 #endif
 
