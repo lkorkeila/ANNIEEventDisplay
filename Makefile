@@ -8,18 +8,14 @@
 CXX           = g++
 CXXDEPEND     = -MM
 CXXFLAGS      = -g -Wall -fPIC -O0
-LD            = g++
-LDFLAGS       = -g 
 
 UNAME := $(shell uname)
 
 ROOTCFLAGS   := $(shell root-config --cflags)
-ROOTLDFLAGS  := $(shell root-config --ldflags)
 ROOTLIBS     := $(shell root-config --evelibs) 
 ROOTGLIBS    := $(shell root-config --glibs)
 
 CXXFLAGS     += $(ROOTCFLAGS)
-LDFLAGS      += $(ROOTLDFLAGS)
 LIBS          = $(ROOTLIBS) $(SYSLIBS)
 GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
 
