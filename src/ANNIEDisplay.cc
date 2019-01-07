@@ -7,6 +7,8 @@
 #include <iostream>
 #include <cmath>
 
+ClassImp(ANNIEDisplay)
+
 ANNIEDisplay::ANNIEDisplay()
 {
   TEveManager::Create();

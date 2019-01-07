@@ -23,7 +23,7 @@
 #include <iostream>
 #include <cmath>
 
-//ClassImp(EventDisplay3D)
+ClassImp(EventDisplay3D)
 
 EventDisplay3D::EventDisplay3D()
 {

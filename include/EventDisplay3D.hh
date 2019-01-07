@@ -67,7 +67,7 @@ class EventDisplay3D : public TObject {
 
   TGeoVolume *top; 
 
-  //ClassDef(EventDisplay3D,0)
+  ClassDef(EventDisplay3D,0)
 
 };
 

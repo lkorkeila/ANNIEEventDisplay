@@ -62,6 +62,7 @@ class ANNIEDisplay : public TObject {
   //Event display GUI element
   EventDisplay3D* ed;
 
+  ClassDef(ANNIEDisplay,0)
 
 };
 

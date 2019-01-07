@@ -36,7 +36,7 @@ ROOTSO := $(LIBDIR)/libEventDisplay.so
 
 ROOTDICT := $(SRCDIR)/EvtDisplayRootDict.cc
 
-ROOTSRC := $(SRCDIR)/EventDisplay3D.cc $(INCDIR)/EventDisplay3D.hh $(SRCDIR)/EventDisplay2D.cc $(INCDIR)/EventDisplay2D.hh $(SRCDIR)/ANNIEDisplay.cc $(INCDIR)/ANNIEDisplay.hh $(INCDIR)/EventDisplayLinkDef.hh 
+ROOTSRC := $(SRCDIR)/EventDisplay3D.cc $(INCDIR)/EventDisplay3D.hh $(SRCDIR)/EventDisplay2D.cc $(INCDIR)/EventDisplay2D.hh $(SRCDIR)/ANNIEDisplay.cc $(INCDIR)/ANNIEDisplay.hh $(INCDIR)/EventDisplayLinkDef.h
 ROOTOBJS := $(TMPDIR)/EventDisplay3D.o $(TMPDIR)/EventDisplay2D.o $(TMPDIR)/ANNIEDisplay.o $(TMPDIR)/EvtDisplayRootDict.o
 
 $(TMPDIR)/%.o : $(SRCDIR)/%.cc
