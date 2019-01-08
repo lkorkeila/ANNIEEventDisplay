@@ -62,15 +62,17 @@ void EventDisplay3D::DrawDetector(){
   geom->SetTopVolume(top);
 
   //Double_t fCylRadius = 1250.;
-  Double_t fCylRadius = 1524.;
+  Double_t fCylRadius = 152.4;
 
-  Double_t fCylLength = 3962.;
+  Double_t fCylLength = 396.2;
 
   TGeoVolume* myCylinder = geom->MakeTube("Cylinder",Water,0.0,fCylRadius,0.5*fCylLength);
   myCylinder->SetLineColor(kCyan);
   myCylinder->SetTransparency(70);  // percentage transparency [0-100]
-  myCylinder->SetVisibility(1);     
-  top->AddNode( myCylinder, 0, new TGeoTranslation(0, 0, 0));
+  myCylinder->SetVisibility(1);
+  TGeoRotation* cylinderrot = new TGeoRotation();
+  cylinderrot->RotateX(90.0);
+  top->AddNode( myCylinder, 0, new TGeoCombiTrans(0.,0.0,0.,cylinderrot));
 
   // close geometry
   geom->CloseGeometry();

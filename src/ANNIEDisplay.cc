@@ -148,12 +148,16 @@ void ANNIEDisplay::GoToEvent(int evnum){
     //TODO: have this print to some message log in GUI window
   } else {
     CurrentEvNum = evnum;
+    this->LoadNTupleEvent();
+    this->ShowEvent();
   }
 }
 
 void ANNIEDisplay::ForwardEvent(){
   if (CurrentEvNum < TotalEntries) {
     ++CurrentEvNum;
+    this->LoadNTupleEvent();
+    this->ShowEvent();
     //TODO: Example re-loads the event here.  Do we really want
     //This class to have the load power though?
   } else {
@@ -164,13 +168,16 @@ void ANNIEDisplay::ForwardEvent(){
 void ANNIEDisplay::BackEvent(){
   if (CurrentEvNum > 0) {
     --CurrentEvNum;
+    this->LoadNTupleEvent();
+    this->ShowEvent();
   } else {
     printf("Already at first event.\n");
   }
 }
 
 void ANNIEDisplay::LoadDemoEvent(TString evtname){
-  TH2D* disphist = (TH2D*) datafile->Get(evtname);
+  TFile* datafile = new TFile(datafilename);
+    TH2D* disphist = (TH2D*) datafile->Get(evtname);
     
   for(int j=0; j<8; j++){
     for(int k=0; k<8; k++){
@@ -188,4 +195,38 @@ void ANNIEDisplay::LoadDemoEvent(TString evtname){
         if(bc!=0) ed->AddPMTHit(xcoor,ycoor,zcoor, bc,0.0);
     }
   }
+}
+
+void ANNIEDisplay::LoadNTupleEvent(){
+  ed->ClearPMTHits();
+  TChain* evtree = new TChain(datatree);
+  std::cout << "DATAFILENAME: " << datafilename << std::endl;
+  evtree->Add(datafilename); 
+  std::vector<double> *digitx = 0;
+  std::vector<double> *digity = 0;
+  std::vector<double> *digitz = 0;
+  std::vector<double> *digitt = 0;
+  std::vector<double> *digitq = 0;
+  std::vector<int> *digittype = 0;
+
+  evtree->SetBranchAddress("digitX",&digitx);
+  evtree->SetBranchAddress("digitY",&digity);
+  evtree->SetBranchAddress("digitZ",&digitz);
+  evtree->SetBranchAddress("digitT",&digitt);
+  evtree->SetBranchAddress("digitQ",&digitq);
+  evtree->SetBranchAddress("digitType",&digittype);
+
+  evtree->GetEvent(CurrentEvNum);
+  //Now, loop through digit types and add PMT hits
+  for (int i = 0; i < digittype->size(); i++){
+    if ((*digittype)[i]==0){ //is PMT
+      double xcoor = digitx->at(i);
+      double ycoor = digity->at(i);
+      double zcoor = digitz->at(i);
+      double time = digitt->at(i);
+      double charge = digitq->at(i);
+      ed->AddPMTHit(xcoor,ycoor,zcoor, time,charge);
+    }
+  } 
+
 }

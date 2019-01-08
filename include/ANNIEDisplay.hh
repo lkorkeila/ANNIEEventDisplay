@@ -5,9 +5,11 @@
 
 #include "TObject.h"
 #include "TSystem.h"
+#include "TROOT.h"
 #include "TGButton.h"
 #include "TGClient.h"
 #include "TString.h"
+#include "TChain.h"
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -17,6 +19,7 @@
 #include <iostream>
 #include <cmath>
 #include <map>
+#include <vector>
 
 #include "TGeometry.h"
 #include "TGeoManager.h"
@@ -42,8 +45,10 @@ class ANNIEDisplay : public TObject {
   ~ANNIEDisplay();
   void Initialize3DDisplay(){ed = new EventDisplay3D();} 
   void GoToEvent(int EvtNumber);
-  void LoadROOTFile(TString filename){datafile = new TFile(filename);}
+  void SelectDataFile(TString thedata){datafilename = thedata;}
+  void SelectTree(TString thetree){datatree = thetree;}
   void LoadDemoEvent(TString evtname);
+  void LoadNTupleEvent();
   void InitializeGUI();
   void ShowEvent();
   // Event navigation GUI methods
@@ -52,11 +57,12 @@ class ANNIEDisplay : public TObject {
   // Will want another text box that sets time ranges for color scale
 
  private:
-  TFile* datafile;
+  TString datafilename;
+  TString datatree = "phaseII";
   void make_evnav_gui();
   double TimeRangeMin = -30.0;
   double TimeRangeMax = 30.0;
-  int CurrentEvNum;
+  int CurrentEvNum = 0;
   int TotalEntries = 9999;
   void LoadEvent();
   //Event display GUI element
