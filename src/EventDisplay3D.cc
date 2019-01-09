@@ -4,16 +4,8 @@ ClassImp(EventDisplay3D)
 
 EventDisplay3D::EventDisplay3D()
 {
-  // set default time ranges
-  _tb[0] = 5.0;
-  _tb[1] = 10.0;
-  _tb[2] = 15.0;
-  _tb[3] = 20.0;
-  _tb[4] = 25.0;
-  _tb[5] = 30.0;
-  _tb[6] = 40.0;
-  _tb[7] = 50.0;
-         
+  //Initialize some times so the timebins are not empty
+  this->SetTimeRanges(-30.0, 30.0); 
 
 }
 
@@ -105,8 +97,9 @@ void EventDisplay3D::PlotEvent(){
   // Containers for Hits
   // ===================
   Int_t markerStyle = 4;   
-  //Double_t markerSize = 0.25;
-  Double_t markerSize = 3.0;
+  //Double_t PMTmarkerSize = 0.25;
+  Double_t PMTmarkerSize = 3.0;
+  Double_t LAPPDmarkerSize = 1.0;
 
 
   Int_t colourCode1 = kBlue+1;
@@ -119,61 +112,136 @@ void EventDisplay3D::PlotEvent(){
   Int_t colourCode8 = kRed;
   Int_t colourCode9 = kRed;
 
-  gEve->AddEvent(new TEveEventManager("Current Event","ANNIE Events")); 
+  gEve->AddEvent(new TEveEventManager("PMT Hit Times (ns)","ANNIE Events")); 
 
-  TEvePointSet* fHitList1 = new TEvePointSet(); 
-  fHitList1->SetMarkerColor(colourCode1);
-  fHitList1->SetMarkerSize(markerSize);
-  fHitList1->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList1);
+  TEvePointSet* fPMTHitList1 = new TEvePointSet(); 
+  fPMTHitList1->SetMarkerColor(colourCode1);
+  fPMTHitList1->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList1->SetMarkerStyle(markerStyle);
+  fPMTHitList1->SetElementName(this->GetTimeRange(1));
+  gEve->AddElement(fPMTHitList1);
 
-  TEvePointSet* fHitList2 = new TEvePointSet(); 
-  fHitList2->SetMarkerColor(colourCode2);
-  fHitList2->SetMarkerSize(markerSize);
-  fHitList2->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList2);
+  TEvePointSet* fPMTHitList2 = new TEvePointSet(); 
+  fPMTHitList2->SetMarkerColor(colourCode2);
+  fPMTHitList2->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList2->SetMarkerStyle(markerStyle);
+  fPMTHitList2->SetElementName(this->GetTimeRange(2));
+  gEve->AddElement(fPMTHitList2);
 
-  TEvePointSet* fHitList3 = new TEvePointSet();  
-  fHitList3->SetMarkerColor(colourCode3);
-  fHitList3->SetMarkerSize(markerSize);
-  fHitList3->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList3);
+  TEvePointSet* fPMTHitList3 = new TEvePointSet();  
+  fPMTHitList3->SetMarkerColor(colourCode3);
+  fPMTHitList3->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList3->SetMarkerStyle(markerStyle);
+  fPMTHitList3->SetElementName(this->GetTimeRange(3));
+  gEve->AddElement(fPMTHitList3);
 
-  TEvePointSet* fHitList4 = new TEvePointSet();  
-  fHitList4->SetMarkerColor(colourCode4);
-  fHitList4->SetMarkerSize(markerSize);
-  fHitList4->SetMarkerStyle(markerStyle);  
-  gEve->AddElement(fHitList4);
+  TEvePointSet* fPMTHitList4 = new TEvePointSet();  
+  fPMTHitList4->SetMarkerColor(colourCode4);
+  fPMTHitList4->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList4->SetMarkerStyle(markerStyle);
+  fPMTHitList4->SetElementName(this->GetTimeRange(4));
+  gEve->AddElement(fPMTHitList4);
 
-  TEvePointSet* fHitList5 = new TEvePointSet();  
-  fHitList5->SetMarkerColor(colourCode5);
-  fHitList5->SetMarkerSize(markerSize);
-  fHitList5->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList5);
+  TEvePointSet* fPMTHitList5 = new TEvePointSet();  
+  fPMTHitList5->SetMarkerColor(colourCode5);
+  fPMTHitList5->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList5->SetMarkerStyle(markerStyle);
+  fPMTHitList5->SetElementName(this->GetTimeRange(5));
+  gEve->AddElement(fPMTHitList5);
 
-  TEvePointSet* fHitList6 = new TEvePointSet();  
-  fHitList6->SetMarkerColor(colourCode6);
-  fHitList6->SetMarkerSize(markerSize);
-  fHitList6->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList6);
+  TEvePointSet* fPMTHitList6 = new TEvePointSet();  
+  fPMTHitList6->SetMarkerColor(colourCode6);
+  fPMTHitList6->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList6->SetMarkerStyle(markerStyle);
+  fPMTHitList6->SetElementName(this->GetTimeRange(6));
+  gEve->AddElement(fPMTHitList6);
 
-  TEvePointSet* fHitList7 = new TEvePointSet();  
-  fHitList7->SetMarkerColor(colourCode7);
-  fHitList7->SetMarkerSize(markerSize);
-  fHitList7->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList7);
+  TEvePointSet* fPMTHitList7 = new TEvePointSet();  
+  fPMTHitList7->SetMarkerColor(colourCode7);
+  fPMTHitList7->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList7->SetMarkerStyle(markerStyle);
+  fPMTHitList7->SetElementName(this->GetTimeRange(7));
+  gEve->AddElement(fPMTHitList7);
 
-  TEvePointSet* fHitList8 = new TEvePointSet(); 
-  fHitList8->SetMarkerColor(colourCode8);
-  fHitList8->SetMarkerSize(markerSize);
-  fHitList8->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList8);
+  TEvePointSet* fPMTHitList8 = new TEvePointSet(); 
+  fPMTHitList8->SetMarkerColor(colourCode8);
+  fPMTHitList8->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList8->SetMarkerStyle(markerStyle);
+  fPMTHitList8->SetElementName(this->GetTimeRange(8));
+  gEve->AddElement(fPMTHitList8);
 
-  TEvePointSet* fHitList9 = new TEvePointSet();
-  fHitList9->SetMarkerColor(colourCode9);
-  fHitList9->SetMarkerSize(markerSize);
-  fHitList9->SetMarkerStyle(markerStyle);
-  gEve->AddElement(fHitList9);
+  TEvePointSet* fPMTHitList9 = new TEvePointSet();
+  fPMTHitList9->SetMarkerColor(colourCode9);
+  fPMTHitList9->SetMarkerSize(PMTmarkerSize);
+  fPMTHitList9->SetMarkerStyle(markerStyle);
+  fPMTHitList9->SetElementName(this->GetTimeRange(9));
+  gEve->AddElement(fPMTHitList9);
+
+  gEve->AddEvent(new TEveEventManager("LAPPD Hit Times (ns)","ANNIE Events")); 
+
+  TEvePointSet* fLAPPDHitList1 = new TEvePointSet(); 
+  fLAPPDHitList1->SetMarkerColor(colourCode1);
+  fLAPPDHitList1->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList1->SetMarkerStyle(markerStyle);
+  fLAPPDHitList1->SetElementName(this->GetTimeRange(1));
+  gEve->AddElement(fLAPPDHitList1);
+
+  TEvePointSet* fLAPPDHitList2 = new TEvePointSet(); 
+  fLAPPDHitList2->SetMarkerColor(colourCode2);
+  fLAPPDHitList2->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList2->SetMarkerStyle(markerStyle);
+  fLAPPDHitList2->SetElementName(this->GetTimeRange(2));
+  gEve->AddElement(fLAPPDHitList2);
+
+  TEvePointSet* fLAPPDHitList3 = new TEvePointSet();  
+  fLAPPDHitList3->SetMarkerColor(colourCode3);
+  fLAPPDHitList3->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList3->SetMarkerStyle(markerStyle);
+  fLAPPDHitList3->SetElementName(this->GetTimeRange(3));
+  gEve->AddElement(fLAPPDHitList3);
+
+  TEvePointSet* fLAPPDHitList4 = new TEvePointSet();  
+  fLAPPDHitList4->SetMarkerColor(colourCode4);
+  fLAPPDHitList4->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList4->SetMarkerStyle(markerStyle);
+  fLAPPDHitList4->SetElementName(this->GetTimeRange(4));
+  gEve->AddElement(fLAPPDHitList4);
+
+  TEvePointSet* fLAPPDHitList5 = new TEvePointSet();  
+  fLAPPDHitList5->SetMarkerColor(colourCode5);
+  fLAPPDHitList5->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList5->SetMarkerStyle(markerStyle);
+  fLAPPDHitList5->SetElementName(this->GetTimeRange(5));
+  gEve->AddElement(fLAPPDHitList5);
+
+  TEvePointSet* fLAPPDHitList6 = new TEvePointSet();  
+  fLAPPDHitList6->SetMarkerColor(colourCode6);
+  fLAPPDHitList6->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList6->SetMarkerStyle(markerStyle);
+  fLAPPDHitList6->SetElementName(this->GetTimeRange(6));
+  gEve->AddElement(fLAPPDHitList6);
+
+  TEvePointSet* fLAPPDHitList7 = new TEvePointSet();  
+  fLAPPDHitList7->SetMarkerColor(colourCode7);
+  fLAPPDHitList7->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList7->SetMarkerStyle(markerStyle);
+  fLAPPDHitList7->SetElementName(this->GetTimeRange(7));
+  gEve->AddElement(fLAPPDHitList7);
+
+  TEvePointSet* fLAPPDHitList8 = new TEvePointSet(); 
+  fLAPPDHitList8->SetMarkerColor(colourCode8);
+  fLAPPDHitList8->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList8->SetMarkerStyle(markerStyle);
+  fLAPPDHitList8->SetElementName(this->GetTimeRange(8));
+  gEve->AddElement(fLAPPDHitList8);
+
+  TEvePointSet* fLAPPDHitList9 = new TEvePointSet();
+  fLAPPDHitList9->SetMarkerColor(colourCode9);
+  fLAPPDHitList9->SetMarkerSize(LAPPDmarkerSize);
+  fLAPPDHitList9->SetMarkerStyle(markerStyle);
+  fLAPPDHitList9->SetElementName(this->GetTimeRange(9));
+  gEve->AddElement(fLAPPDHitList9);
+
 
 
   // Loop over digits
@@ -181,7 +249,6 @@ void EventDisplay3D::PlotEvent(){
   for(int i=0; i < PMTT.size(); i++){
     
     double t = PMTT[i];
-     
     double x = PMTX[i];
     double y = PMTY[i];
     double z = PMTZ[i];
@@ -201,24 +268,77 @@ void EventDisplay3D::PlotEvent(){
 
 
     switch( listNumber ){
-      case 1: fHitList1->SetNextPoint(x,y,z); break;
-      case 2: fHitList2->SetNextPoint(x,y,z); break;
-      case 3: fHitList3->SetNextPoint(x,y,z); break;
-      case 4: fHitList4->SetNextPoint(x,y,z); break;
-      case 5: fHitList5->SetNextPoint(x,y,z); break;
-      case 6: fHitList6->SetNextPoint(x,y,z); break;
-      case 7: fHitList7->SetNextPoint(x,y,z); break;
-      case 8: fHitList8->SetNextPoint(x,y,z); break;
-      case 9: fHitList9->SetNextPoint(x,y,z); break;
+      case 1: fPMTHitList1->SetNextPoint(x,y,z); break;
+      case 2: fPMTHitList2->SetNextPoint(x,y,z); break;
+      case 3: fPMTHitList3->SetNextPoint(x,y,z); break;
+      case 4: fPMTHitList4->SetNextPoint(x,y,z); break;
+      case 5: fPMTHitList5->SetNextPoint(x,y,z); break;
+      case 6: fPMTHitList6->SetNextPoint(x,y,z); break;
+      case 7: fPMTHitList7->SetNextPoint(x,y,z); break;
+      case 8: fPMTHitList8->SetNextPoint(x,y,z); break;
+      case 9: fPMTHitList9->SetNextPoint(x,y,z); break;
       default: break;
     }
   }
-  
+
+  // Loop over LAPPD Hits 
+  // ================
+  for(int i=0; i < LAPPDT.size(); i++){
+    
+    double t = LAPPDT[i];
+    double x = LAPPDX[i];
+    double y = LAPPDY[i];
+    double z = LAPPDZ[i];
+
+    Int_t listNumber = 0;
+
+    if( t<_tb[0] )               listNumber = 1;
+    if( t>=_tb[0] && t<_tb[1] )  listNumber = 2;
+    if( t>=_tb[1] && t<_tb[2] )  listNumber = 3;
+    if( t>=_tb[2] && t<_tb[3] )  listNumber = 4;
+    if( t>=_tb[3] && t<_tb[4] )  listNumber = 5;
+    if( t>=_tb[4] && t<_tb[5] )  listNumber = 6;
+    if( t>=_tb[5] && t<_tb[6] )  listNumber = 7;
+    if( t>=_tb[6] && t<_tb[7] )  listNumber = 8;
+    if( t>=_tb[7] )              listNumber = 9;
+
+
+
+    switch( listNumber ){
+      case 1: fLAPPDHitList1->SetNextPoint(x,y,z); break;
+      case 2: fLAPPDHitList2->SetNextPoint(x,y,z); break;
+      case 3: fLAPPDHitList3->SetNextPoint(x,y,z); break;
+      case 4: fLAPPDHitList4->SetNextPoint(x,y,z); break;
+      case 5: fLAPPDHitList5->SetNextPoint(x,y,z); break;
+      case 6: fLAPPDHitList6->SetNextPoint(x,y,z); break;
+      case 7: fLAPPDHitList7->SetNextPoint(x,y,z); break;
+      case 8: fLAPPDHitList8->SetNextPoint(x,y,z); break;
+      case 9: fLAPPDHitList9->SetNextPoint(x,y,z); break;
+      default: break;
+    }
+  }
+
   // Re-draw Event Display
   // =====================
   gEve->Redraw3D();
 
   return;
+}
+
+const char * EventDisplay3D::GetTimeRange(int PointSet){
+  std::ostringstream strs; 
+  if (PointSet < 1 || PointSet > 9){
+    std::cout << "Problem labeling point set; outside defined indices" << std::endl;
+    strs << "nope";
+  } else if (PointSet == 1){
+    strs << "< " << _tb[0];
+  } else if (PointSet == 9){
+    strs << "> " << _tb[7];
+  } else { 
+    strs << _tb[PointSet - 1] << " to " << _tb[PointSet];
+  }
+  std::string TimeRange = strs.str();
+  return TimeRange.c_str();
 }
 
 void EventDisplay3D::AddPMTHit(double x, double y, double z, double t, double q){

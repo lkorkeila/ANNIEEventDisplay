@@ -7,7 +7,6 @@
   gSystem->Load("../lib/libEventDisplay.so");
   gROOT->ProcessLine("#include <vector>");
   ANNIEDisplay* ad = new ANNIEDisplay();
-  ad->Initialize3DDisplay();
   ad->SelectDataFile("PhaseIITest.root");
   ad->LoadNTupleEvent();
   ad->InitializeGUI();

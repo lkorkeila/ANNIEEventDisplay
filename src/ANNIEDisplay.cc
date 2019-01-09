@@ -92,7 +92,7 @@ ANNIEDisplay::ANNIEDisplay()
   fRootStyle->cd();
 //  gROOT->ForceStyle();
 //  gStyle->ls();
-
+  this->Initialize3DDisplay();
 }
 
 ANNIEDisplay::~ANNIEDisplay()
@@ -102,7 +102,7 @@ ANNIEDisplay::~ANNIEDisplay()
 
 void ANNIEDisplay::InitializeGUI(){
   ed->DrawDetector();
-  this->make_evnav_gui();
+  this->OpenNavigationPanel();
 }
 
 void ANNIEDisplay::ShowEvent(){
@@ -111,7 +111,7 @@ void ANNIEDisplay::ShowEvent(){
   std::cout << "DISPLAYING EVENT " << CurrentEvNum << std::endl;
 }
 
-void ANNIEDisplay::make_evnav_gui(){
+void ANNIEDisplay::OpenNavigationPanel(){
   // Create minimal GUI for event navigation.
   TEveBrowser* browser = gEve->GetBrowser();
   browser->StartEmbedding(TRootBrowser::kLeft);
@@ -219,14 +219,22 @@ void ANNIEDisplay::LoadNTupleEvent(){
   evtree->GetEvent(CurrentEvNum);
   //Now, loop through digit types and add PMT hits
   for (int i = 0; i < digittype->size(); i++){
-    if ((*digittype)[i]==0){ //is PMT
+    if (digittype->at(i)==0){ //is PMT
       double xcoor = digitx->at(i);
       double ycoor = digity->at(i);
       double zcoor = digitz->at(i);
       double time = digitt->at(i);
       double charge = digitq->at(i);
       ed->AddPMTHit(xcoor,ycoor,zcoor, time,charge);
+    } else if (digittype->at(i)==1){ //is LAPPD
+      double xcoor = digitx->at(i);
+      double ycoor = digity->at(i);
+      double zcoor = digitz->at(i);
+      double time = digitt->at(i);
+      double charge = digitq->at(i);
+      ed->AddLAPPDHit(xcoor,ycoor,zcoor, time,charge);
     }
-  } 
+ 
+  }
 
 }

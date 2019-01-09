@@ -43,7 +43,6 @@ class ANNIEDisplay : public TObject {
   ANNIEDisplay();
 
   ~ANNIEDisplay();
-  void Initialize3DDisplay(){ed = new EventDisplay3D();} 
   void GoToEvent(int EvtNumber);
   void SelectDataFile(TString thedata){datafilename = thedata;}
   void SelectTree(TString thetree){datatree = thetree;}
@@ -57,9 +56,10 @@ class ANNIEDisplay : public TObject {
   // Will want another text box that sets time ranges for color scale
 
  private:
+  void Initialize3DDisplay(){ed = new EventDisplay3D();} 
   TString datafilename;
   TString datatree = "phaseII";
-  void make_evnav_gui();
+  void OpenNavigationPanel();
   double TimeRangeMin = -30.0;
   double TimeRangeMax = 30.0;
   int CurrentEvNum = 0;

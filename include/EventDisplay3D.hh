@@ -9,6 +9,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <cmath>
 #include <map>
 
@@ -48,6 +49,7 @@ class EventDisplay3D : public TObject {
   bool TimeRangeSet;
 
  private: 
+  const char * GetTimeRange(int PointSet);
   std::vector<double> PMTX;
   std::vector<double> PMTY;
   std::vector<double> PMTZ;
