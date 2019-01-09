@@ -1,27 +1,4 @@
 #include "EventDisplay3D.hh"
-#include "TObject.h"
-#include "TString.h"
-#include "TFile.h"
-#include "TH1.h"
-
-#include "TGeometry.h"
-#include "TGeoManager.h"
-#include "TGeoMaterial.h"
-#include "TGeoMatrix.h"
-
-#include "TEveManager.h"
-#include "TEveEventManager.h"
-#include "TEveViewer.h"
-#include "TEveGeoNode.h"
-#include "TEvePointSet.h"
-#include "TEveStraightLineSet.h"
-#include "TEveArrow.h"
-#include "TEveText.h"
-#include "TStyle.h"
-
-
-#include <iostream>
-#include <cmath>
 
 ClassImp(EventDisplay3D)
 
@@ -121,6 +98,10 @@ void EventDisplay3D::PlotEvent(){
     std::cout << "Please set time range before plotting an event" << std::endl;
   }
 
+  // Delete the Current Event (and deletes the elements in it
+  TEveEventManager * currentEvent = gEve->GetCurrentEvent();
+  delete currentEvent;
+
   // Containers for Hits
   // ===================
   Int_t markerStyle = 4;   
@@ -137,7 +118,8 @@ void EventDisplay3D::PlotEvent(){
   Int_t colourCode7 = kRed;
   Int_t colourCode8 = kRed;
   Int_t colourCode9 = kRed;
- 
+
+  gEve->AddEvent(new TEveEventManager("Current Event","ANNIE Events")); 
 
   TEvePointSet* fHitList1 = new TEvePointSet(); 
   fHitList1->SetMarkerColor(colourCode1);

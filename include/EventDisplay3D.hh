@@ -2,6 +2,9 @@
 #define EVENTDISPLAY3D_HH
 
 #include "TObject.h"
+#include "TObject.h"
+#include "TString.h"
+#include "TFile.h"
 #include "TH1.h"
 
 #include <string>
@@ -22,6 +25,7 @@
 #include "TEveStraightLineSet.h"
 #include "TEveArrow.h"
 #include "TEveText.h"
+
 
 class EventDisplay3D : public TObject {
 
@@ -58,7 +62,6 @@ class EventDisplay3D : public TObject {
 
  
   double _tb[8];
- 
   TGeoManager *geom;	
   TGeoMaterial *matVacuum;
   TGeoMaterial *matWater;

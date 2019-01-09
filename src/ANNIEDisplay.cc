@@ -108,6 +108,7 @@ void ANNIEDisplay::InitializeGUI(){
 void ANNIEDisplay::ShowEvent(){
   ed->SetTimeRanges(TimeRangeMin, TimeRangeMax);
   ed->PlotEvent();
+  std::cout << "DISPLAYING EVENT " << CurrentEvNum << std::endl;
 }
 
 void ANNIEDisplay::make_evnav_gui(){
@@ -200,7 +201,6 @@ void ANNIEDisplay::LoadDemoEvent(TString evtname){
 void ANNIEDisplay::LoadNTupleEvent(){
   ed->ClearPMTHits();
   TChain* evtree = new TChain(datatree);
-  std::cout << "DATAFILENAME: " << datafilename << std::endl;
   evtree->Add(datafilename); 
   std::vector<double> *digitx = 0;
   std::vector<double> *digity = 0;
