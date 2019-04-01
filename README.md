@@ -44,3 +44,14 @@ shown:
        |                           |
        V                           V
    EventDisplay3D               ControlGUI
+
+
+
+#####GETTING THIS TO COMPILE ON ROOT6#########
+
+So this is pretty crappy.  But, you have to add to your bashrc:
+
+$ export ROOT_INCLUDE_PATH=/path/to/this/repositorys/include/
+
+For some reason, the root cannot find the includes needed when loading the
+shared object with gSystem.
