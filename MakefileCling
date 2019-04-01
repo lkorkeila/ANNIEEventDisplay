@@ -1,0 +1,86 @@
+## Makefile ##
+
+#
+# notes:
+#
+#
+
+CXX           = g++
+CXXDEPEND     = -MM
+CXXFLAGS      = -g -Wall -fPIC -O0
+
+UNAME := $(shell uname)
+
+ROOTCFLAGS   := $(shell root-config --cflags) -DUSE_ROOT
+ROOTLIBS     := $(shell root-config --evelibs) 
+ROOTGLIBS    := $(shell root-config --glibs)
+
+CXXFLAGS     += $(ROOTCFLAGS)
+LIBS          = $(ROOTLIBS) $(SYSLIBS)
+GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
+
+INCDIR = ./include
+SRCDIR = ./src
+TMPDIR = ./tmp
+LIBDIR = ./lib
+BINDIR = ./bin
+
+INCLUDES = -I$(INCDIR)
+
+.PHONY: 
+	all
+
+all: clean rootcling shared
+
+ROOTSO := $(LIBDIR)/libEventDisplay.so
+
+ROOTDICT := $(SRCDIR)/EvtDisplayRootDict.cc
+
+ROOTSRC := $(SRCDIR)/EventDisplay3D.cc $(INCDIR)/EventDisplay3D.hh $(SRCDIR)/EventDisplay2D.cc $(INCDIR)/EventDisplay2D.hh $(SRCDIR)/ANNIEDisplay.cc $(INCDIR)/ANNIEDisplay.hh $(INCDIR)/EventDisplayLinkDef.h
+ROOTOBJS := $(TMPDIR)/EventDisplay3D.o $(TMPDIR)/EventDisplay2D.o $(TMPDIR)/ANNIEDisplay.o $(TMPDIR)/EvtDisplayRootDict.o
+
+$(TMPDIR)/%.o : $(SRCDIR)/%.cc
+	@echo "<**Compiling $@**>"
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(TMPDIR)/%.d: $(SRCDIR)/%.cc
+	@echo "<**Depend $@**>"
+	set -e; $(CXX) $(CXXDEPEND) $(CXXFLAGS) $(INCLUDES) $< \
+	| sed 's!$*\.o!& $@!' >$@;\
+	[ -s $@ ] || rm -f $@
+
+$(ROOTDICT) : $(ROOTSRC)
+
+rootcling : $(ROOTSRC)
+	@echo "<**Rootcling**>"
+	rootcling -f $(ROOTDICT) -c -rmf $(LIBDIR)/libEventDisplay.rootmap -rml $(ROOTSO) -m $(LIBDIR)/EvtDisplayRootDict_rdict.pcm -I$(INCDIR) -I$(shell root-config --incdir) EventDisplay3D.hh EventDisplay2D.hh ANNIEDisplay.hh EventDisplayLinkDef.h
+
+shared: $(ROOTDICT) $(ROOTSRC) $(ROOTOBJS)
+	@echo "<**Shared**>"
+ifeq ($(UNAME), Darwin) 
+	g++ -dynamiclib $(ROOTLIBS) $(ROOTGLIBS) -O $(ROOTOBJS) -o $(ROOTSO)
+	cp $(SRCDIR)/EvtDisplayRootDict_rdict.pcm $(TMPDIR)
+	cp $(SRCDIR)/EvtDisplayRootDict_rdict.pcm $(LIBDIR)
+endif
+ifeq ($(UNAME), Linux) 
+	g++ -shared $(ROOTLIBS) $(ROOTGLIBS) -O $(ROOTOBJS) -o $(ROOTSO)
+	cp $(SRCDIR)/EvtDisplayRootDict_rdict.pcm $(TMPDIR)
+	cp $(SRCDIR)/EvtDisplayRootDict_rdict.pcm $(LIBDIR)
+endif
+
+clean :
+	@echo "<**Clean**>"
+	rm -f $(SRCDIR)/*~ $(INCDIR)/*~ $(TMPDIR)/*.o $(TMPDIR)/*.d $(TMPDIR)/*.a $(TMPDIR)/*.pcm $(LIBDIR)/*.so $(SRCDIR)/EvtDisplayRootDict.*
+	rm -f $(SRCDIR)/EvtDisplayRootDict_rdict.pcm
+	rm -f $(LIBDIR)/EvtDisplayRootDict_rdict.pcm
+	rm -f $(LIBDIR)/libEventDisplay.rootmap
+
+DEPS = $(ROOTOBJS:$(TMPDIR)/%.o=$(TMPDIR)/%.d)
+
+ifeq ($(MAKECMDGOALS),all)
+ include $(DEPS)
+endif
+
+ifeq ($(MAKECMDGOALS),shared)
+ include $(DEPS)
+endif
